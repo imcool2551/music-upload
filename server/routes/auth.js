@@ -43,7 +43,7 @@ router.post('/api/auth/login', isNotLoggedIn, async (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.json({ mesage: '로그인 성공' });
+      return res.json({ nickname: req.user.nickname });
     });
   })(req, res, next);
 });
@@ -51,6 +51,10 @@ router.post('/api/auth/login', isNotLoggedIn, async (req, res, next) => {
 router.get('/api/auth/logout', isLoggedIn, (req, res, next) => {
   req.logout();
   res.json({ message: '로그아웃 성공' });
+});
+
+router.get('/api/auth/user', isLoggedIn, (req, res, next) => {
+  res.json({ nickname: req.user.nickname });
 });
 
 router.patch('/api/auth/user', isLoggedIn, async (req, res, next) => {
