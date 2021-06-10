@@ -17,12 +17,23 @@ router.post('/api/auth/signup', isNotLoggedIn, async (req, res, next) => {
       return res.status(400).json({ message: '이미 존재하는 아이디입니다' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    await User.create({
+    const user = await User.create({
       userId,
       password: hashedPassword,
       nickname,
     });
-    return res.status(201).json({ message: '회원가입이 완료되었습니다' });
+
+    req.login(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      return res
+        .status(201)
+        .json({
+          message: '회원가입이 완료되었습니다',
+          nickname: req.user.nickname,
+        });
+    });
   } catch (err) {
     console.error(err);
     next(err);

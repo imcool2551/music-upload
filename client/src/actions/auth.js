@@ -47,9 +47,9 @@ export const signup =
         password,
         nickname,
       });
-      dispatch({ type: SIGN_UP });
+      dispatch({ type: SIGN_UP, payload: data.nickname });
       alert(data.message);
-      history.push('/login');
+      history.push('/');
     } catch (err) {
       alert(err.response.data.message);
     }

@@ -11,10 +11,10 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, isLoggedIn: true, nickname: action.payload };
     case SIGN_IN:
       return { ...state, isLoggedIn: true, nickname: action.payload };
+    case SIGN_UP:
+      return { ...state, isLoggedIn: true, nickname: action.payload };
     case SIGN_OUT:
       return { ...state, isLoggedIn: false, nickname: null };
-    case SIGN_UP:
-      return state;
     default:
       return state;
   }
