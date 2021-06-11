@@ -32,7 +32,7 @@ const SubmitValidationForm = (props) => {
           label="비밀번호"
         />
       </div>
-      {error && <strong>{error}</strong>}
+      {error && <strong style={{ color: 'red' }}>{error}</strong>}
       <h4>
         멤버가 아니신가요? <Link to="/signup">회원가입</Link>
       </h4>

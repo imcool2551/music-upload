@@ -4,6 +4,7 @@ import { Router, Route, Switch } from 'react-router-dom';
 
 import Header from './Header';
 import SongList from './songs/SongList';
+import AlbumCreate from './songs/AlbumCreate';
 import Login from './auth/Login';
 import Logout from './auth/Logout';
 import Signup from './auth/Signup';
@@ -17,6 +18,7 @@ const App = () => {
       <Header />
       <Switch>
         <Route path="/" exact component={SongList} />
+        <Route path="/album/new" exact component={AlbumCreate} />
         <Route path="/login" exact component={Login} />
         <Route path="/logout" exact component={Logout} />
         <Route path="/signup" exact component={Signup} />
