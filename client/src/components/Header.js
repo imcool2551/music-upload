@@ -20,7 +20,7 @@ const Header = ({ isLoggedIn, getCurrentUser }) => {
             홈
           </Link>
           <Link className="item" to="/mypage">
-            내 프로필
+            프로필 수정
           </Link>
         </>
       )}

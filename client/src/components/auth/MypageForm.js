@@ -2,7 +2,7 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 
 const passwordMatch = (value, allValues) =>
-  value !== allValues.password ? '비밀번호가 일치하지 않습니다' : undefined;
+  value !== allValues.newPassword ? '비밀번호가 일치하지 않습니다' : undefined;
 
 const renderField = ({
   input,
@@ -27,40 +27,32 @@ const FieldLevelValidationForm = (props) => {
     <form className="ui form" onSubmit={handleSubmit(onSubmit)}>
       <div className="field">
         <Field
-          name="userId"
-          type="text"
+          name="originalPassword"
+          type="password"
           component={renderField}
-          label="아이디"
+          label="현재 비밀번호"
         />
       </div>
       <div className="field">
         <Field
-          name="password"
+          name="newPassword"
           type="password"
           component={renderField}
-          label="비밀번호"
+          label="새 비밀번호"
         />
       </div>
       <div className="field">
         <Field
-          name="passwordMatch"
+          name="newPasswordMatch"
           type="password"
           component={renderField}
-          label="비밀번호 확인"
+          label="새 비밀번호 확인"
           validate={[passwordMatch]}
-        />
-      </div>
-      <div className="field">
-        <Field
-          name="nickname"
-          type="text"
-          component={renderField}
-          label="닉네임"
         />
       </div>
       <div>
         <button className="ui button" type="submit">
-          회원가입
+          비밀번호 변경
         </button>
       </div>
     </form>
@@ -68,5 +60,5 @@ const FieldLevelValidationForm = (props) => {
 };
 
 export default reduxForm({
-  form: 'signupForm',
+  form: 'mypageForm',
 })(FieldLevelValidationForm);

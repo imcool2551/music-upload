@@ -1,7 +1,13 @@
 import { SubmissionError } from 'redux-form';
 import api from '../apis/api';
 import history from '../history';
-import { SIGN_IN, SIGN_OUT, SIGN_UP, GET_CURRENT_USER } from './types';
+import {
+  SIGN_IN,
+  SIGN_OUT,
+  SIGN_UP,
+  GET_CURRENT_USER,
+  CHANGE_PASSWORD,
+} from './types';
 
 export const getCurrentUser = () => async (dispatch) => {
   try {
@@ -24,6 +30,7 @@ export const login =
       dispatch({ type: SIGN_IN, payload: data.nickname });
       history.push('/');
     } catch (err) {
+      alert(err.response.data.message);
       throw new SubmissionError({ _error: '로그인 실패' });
     }
   };
@@ -50,6 +57,22 @@ export const signup =
       dispatch({ type: SIGN_UP, payload: data.nickname });
       alert(data.message);
       history.push('/');
+    } catch (err) {
+      alert(err.response.data.message);
+    }
+  };
+
+export const changePassword =
+  ({ originalPassword, newPassword }) =>
+  async (dispatch) => {
+    try {
+      const { data } = await api.patch('/api/auth/changepassword', {
+        originalPassword,
+        newPassword,
+      });
+      dispatch({ type: CHANGE_PASSWORD });
+      alert(data.message);
+      history.push('/login');
     } catch (err) {
       alert(err.response.data.message);
     }

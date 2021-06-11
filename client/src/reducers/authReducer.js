@@ -1,4 +1,10 @@
-import { SIGN_IN, SIGN_OUT, SIGN_UP, GET_CURRENT_USER } from '../actions/types';
+import {
+  SIGN_IN,
+  SIGN_OUT,
+  SIGN_UP,
+  GET_CURRENT_USER,
+  CHANGE_PASSWORD,
+} from '../actions/types';
 
 const INITIAL_STATE = {
   isLoggedIn: null,
@@ -14,6 +20,8 @@ export default (state = INITIAL_STATE, action) => {
     case SIGN_UP:
       return { ...state, isLoggedIn: true, nickname: action.payload };
     case SIGN_OUT:
+      return { ...state, isLoggedIn: false, nickname: null };
+    case CHANGE_PASSWORD:
       return { ...state, isLoggedIn: false, nickname: null };
     default:
       return state;

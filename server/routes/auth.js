@@ -27,12 +27,10 @@ router.post('/api/auth/signup', isNotLoggedIn, async (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res
-        .status(201)
-        .json({
-          message: '회원가입이 완료되었습니다',
-          nickname: req.user.nickname,
-        });
+      return res.status(201).json({
+        message: '회원가입이 완료되었습니다',
+        nickname: req.user.nickname,
+      });
     });
   } catch (err) {
     console.error(err);
@@ -50,7 +48,7 @@ router.post('/api/auth/login', isNotLoggedIn, async (req, res, next) => {
       console.log(info);
       return res.status(401).json({ message: info.message });
     }
-    return req.login(user, (err) => {
+    req.login(user, (err) => {
       if (err) {
         return next(err);
       }
@@ -61,14 +59,15 @@ router.post('/api/auth/login', isNotLoggedIn, async (req, res, next) => {
 
 router.get('/api/auth/logout', isLoggedIn, (req, res, next) => {
   req.logout();
-  res.json({ message: '로그아웃 성공' });
+  req.session.destroy();
+  res.json({ message: '다시 로그인해주세요' });
 });
 
 router.get('/api/auth/user', isLoggedIn, (req, res, next) => {
   res.json({ nickname: req.user.nickname });
 });
 
-router.patch('/api/auth/user', isLoggedIn, async (req, res, next) => {
+router.patch('/api/auth/changepassword', isLoggedIn, async (req, res, next) => {
   const { originalPassword, newPassword } = req.body;
   if (!originalPassword || !newPassword) {
     return res
@@ -81,7 +80,9 @@ router.patch('/api/auth/user', isLoggedIn, async (req, res, next) => {
       req.user.password
     );
     if (!passwordMatch) {
-      return res.status(401).json({ message: '비밀번호가 일치하지 않습니다' });
+      return res
+        .status(401)
+        .json({ message: '현재 비밀번호가 일치하지 않습니다' });
     }
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await User.update(
@@ -92,7 +93,7 @@ router.patch('/api/auth/user', isLoggedIn, async (req, res, next) => {
         where: { id: req.user.id },
       }
     );
-    res.json({ message: '비밀번호가 업데이트 되었습니다' });
+    res.redirect(303, '/api/auth/logout');
   } catch (err) {
     console.error(err);
     next(err);
