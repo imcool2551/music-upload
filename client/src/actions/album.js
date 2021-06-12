@@ -1,7 +1,7 @@
 import api from '../apis/api';
 import axios from 'axios';
 import history from '../history';
-import { CREATE_ALBUM } from './types';
+import { CREATE_ALBUM, FETCH_SONGS } from './types';
 
 export const createAlbum =
   ({ albumName, albumImage, songs }) =>
@@ -74,3 +74,12 @@ export const createAlbum =
       alert(err.response.data.message);
     }
   };
+
+export const fetchSongs = (searchTerm) => async (dispatch) => {
+  const { data } = await api.get('/api/album', {
+    params: {
+      q: encodeURIComponent(searchTerm),
+    },
+  });
+  dispatch({ type: FETCH_SONGS, payload: data.songs });
+};

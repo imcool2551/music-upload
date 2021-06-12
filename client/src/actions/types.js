@@ -5,3 +5,4 @@ export const SIGN_UP = 'SIGN_UP';
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 
 export const CREATE_ALBUM = 'CREATE_ALBUM';
+export const FETCH_SONGS = 'FETCH_SONGS';

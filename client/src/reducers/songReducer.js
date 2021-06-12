@@ -1,11 +1,12 @@
-import {} from '../actions/types';
+import _ from 'lodash';
+import { CREATE_ALBUM, FETCH_SONGS } from '../actions/types';
 
-const INITIAL_STATE = {
-  hello: 'world',
-};
-
-export default (state = INITIAL_STATE, action) => {
+export default (state = [], action) => {
   switch (action.type) {
+    case FETCH_SONGS:
+      return [...action.payload];
+    case CREATE_ALBUM:
+      return state;
     default:
       return state;
   }

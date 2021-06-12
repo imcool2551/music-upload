@@ -31,6 +31,6 @@ module.exports = class Song extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.Song.belongsTo(db.Album);
+    db.Song.belongsTo(db.Album, { as: 'album' });
   }
 };

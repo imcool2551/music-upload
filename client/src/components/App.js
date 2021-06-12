@@ -3,7 +3,7 @@ import React from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 
 import Header from './Header';
-import SongList from './songs/SongList';
+import Home from './songs/Home';
 import AlbumCreate from './songs/AlbumCreate';
 import Login from './auth/Login';
 import Logout from './auth/Logout';
@@ -17,7 +17,7 @@ const App = () => {
     <Router history={history}>
       <Header />
       <Switch>
-        <Route path="/" exact component={SongList} />
+        <Route path="/" exact component={Home} />
         <Route path="/album/new" exact component={AlbumCreate} />
         <Route path="/login" exact component={Login} />
         <Route path="/logout" exact component={Logout} />

@@ -9,7 +9,7 @@ module.exports = class Album extends Sequelize.Model {
           allowNull: false,
         },
         thumbnailPath: {
-          type: Sequelize.STRING,
+          type: Sequelize.TEXT,
         },
       },
       {
