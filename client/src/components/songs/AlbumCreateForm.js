@@ -50,22 +50,10 @@ const renderMusicUpload = ({ input, label, meta: { touched, error } }) => {
 
 const renderSongs = ({ fields, meta: { touched, error, submitFailed } }) => (
   <ul>
-    <li>
-      <button
-        className="ui black basic button"
-        type="button"
-        onClick={() => fields.push({})}
-      >
-        노래 추가
-      </button>
-      {(touched || submitFailed) && error && (
-        <span style={{ color: 'red' }}>{error}</span>
-      )}
-    </li>
     {fields.map((song, index) => (
       <li
         style={{
-          marginTop: '1rem',
+          margin: '1rem',
           padding: '1rem',
           backgroundColor: '#E5EAEA',
         }}
@@ -106,6 +94,18 @@ const renderSongs = ({ fields, meta: { touched, error, submitFailed } }) => (
         </div>
       </li>
     ))}
+    <li>
+      <button
+        className="ui black basic button"
+        type="button"
+        onClick={() => fields.push({})}
+      >
+        노래 추가
+      </button>
+      {(touched || submitFailed) && error && (
+        <span style={{ color: 'red' }}>{error}</span>
+      )}
+    </li>
   </ul>
 );
 

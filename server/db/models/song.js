@@ -9,7 +9,7 @@ module.exports = class Song extends Sequelize.Model {
           allowNull: false,
         },
         filePath: {
-          type: Sequelize.STRING(100),
+          type: Sequelize.TEXT,
           allowNull: false,
         },
         artistName: {

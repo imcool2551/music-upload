@@ -3,10 +3,11 @@ import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 
 import AlbumCreateForm from './AlbumCreateForm';
+import { createAlbum } from '../../actions/album';
 
-const AlbumCreate = ({ isLoggedIn }) => {
+const AlbumCreate = ({ isLoggedIn, createAlbum }) => {
   const onSubmit = async (formValues) => {
-    console.log(formValues);
+    await createAlbum(formValues);
   };
 
   if (!isLoggedIn) {
@@ -25,4 +26,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(AlbumCreate);
+export default connect(mapStateToProps, { createAlbum })(AlbumCreate);

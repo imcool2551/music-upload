@@ -9,8 +9,7 @@ module.exports = class Album extends Sequelize.Model {
           allowNull: false,
         },
         thumbnailPath: {
-          type: Sequelize.STRING(100),
-          allowNull: false,
+          type: Sequelize.STRING,
         },
       },
       {
@@ -27,6 +26,6 @@ module.exports = class Album extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.Album.hasMany(db.Song);
+    db.Album.hasMany(db.Song, { as: 'songs' });
   }
 };

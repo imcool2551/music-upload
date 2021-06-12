@@ -8,9 +8,8 @@ const SongList = ({ isLoggedIn }) => {
   }
   return (
     <div className="ui container">
-      <h4>앨범 추가하기</h4>
       <Link to="/album/new">
-        <i className="plus square outline icon"></i>
+        <button className="ui blue basic button">앨범 추가</button>
       </Link>
     </div>
   );
