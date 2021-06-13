@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
+const s3 = require('../config/aws-s3');
 
 const { isLoggedIn } = require('../middlewares');
 const { Album, Song, sequelize } = require('../db/models');
 
 router.use(isLoggedIn);
 
-/* CREATE 앨범  */
+/* 앨범 생성 */
 router.post('/api/album', async (req, res, next) => {
   const { name } = req.body;
   if (!name) {
@@ -48,7 +49,7 @@ router.patch('/api/album/:id', async (req, res, next) => {
       }
     );
 
-    /* 2. 음원 파일 패스 삽입  */
+    /* 2. 음원 파일들 패스 삽입  */
     const songInstances = await Promise.all(
       songs.map((song) => {
         return Song.create(song, { transaction: t });
@@ -75,7 +76,7 @@ router.patch('/api/album/:id', async (req, res, next) => {
   }
 });
 
-/* READ 음원 (여러개) */
+/* 음원 조회 */
 router.get('/api/album', async (req, res, next) => {
   let { q } = req.query || '';
   q = `${decodeURIComponent(q)}%`;
@@ -99,7 +100,7 @@ router.get('/api/album', async (req, res, next) => {
   }
 });
 
-/* READ 앨범 (1개) */
+/* 앨범 조회 */
 router.get('/api/album/:id', async (req, res, next) => {
   try {
     const album = await Album.findOne({
@@ -112,6 +113,51 @@ router.get('/api/album/:id', async (req, res, next) => {
       ],
     });
     res.json({ album });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+/* 음원 수정 */
+router.patch('/api/song/:id', async (req, res, next) => {
+  const { title, artistName, filePath } = req.body;
+  if (!title || !artistName) {
+    return res
+      .status(400)
+      .json({ message: '노래 제목과 가수이름을 명시해주세요' });
+  }
+
+  try {
+    const song = await Song.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: Album,
+          as: 'album',
+        },
+      ],
+    });
+
+    if (!song) {
+      return res.status(404).json({ message: '존재하지 않는 곡입니다' });
+    }
+
+    /* 음원파일 변경이 있다면, s3 버킷에서 이전 파일 삭제 */
+    if (song.filePath !== filePath) {
+      const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: song.filePath,
+      };
+      await s3.deleteObject(params).promise();
+    }
+
+    song.title = title;
+    song.artistName = artistName;
+    song.filePath = filePath;
+    const updatedSong = await song.save();
+
+    res.json(updatedSong);
   } catch (err) {
     console.error(err);
     next(err);

@@ -1,7 +1,7 @@
 import api from '../apis/api';
 import axios from 'axios';
 import history from '../history';
-import { CREATE_ALBUM, FETCH_SONGS } from './types';
+import { CREATE_ALBUM, FETCH_SONGS, UPDATE_SONG } from './types';
 
 export const createAlbum =
   ({ albumName, albumImage, songs }) =>
@@ -14,7 +14,7 @@ export const createAlbum =
       });
       console.log(albumData);
 
-      /* 2. 앨범 커버 이미지, 음원 파일을 위한 presigned-url 생성 */
+      /* 2. 앨범 커버 이미지, 음원 파일을 위한 presigned-url 요청 */
       const { data: imageData } = await api.get('/api/upload/image', {
         params: {
           filename: `${albumData.album.id}/${encodeURIComponent(albumName)}`,
@@ -83,3 +83,50 @@ export const fetchSongs = (searchTerm) => async (dispatch) => {
   });
   dispatch({ type: FETCH_SONGS, payload: data.songs });
 };
+
+export const updateSong =
+  ({ song, title, artistName, file }) =>
+  async (dispatch) => {
+    const message = `
+      음원을 수정하시겠습니까?
+
+      제목
+        Before: ${song.title}    After: ${title}
+
+      아티스트
+        Before: ${song.artistName}    After: ${artistName}
+
+      음원 파일 변경: ${file ? 'O' : 'X'}
+    `;
+    if (window.confirm(message)) {
+      try {
+        let filePath = song.filePath;
+        /* 1. 파일변경이 있다면   */
+        if (file) {
+          /* presigned-url 요청하고 */
+          const { data: audioData } = await api.get('/api/upload/audio', {
+            params: {
+              filename: `${song.albumId}/${encodeURIComponent(file.name)}`,
+            },
+          });
+          /* s3 버킷에 음원파일 업로드 한 뒤 파일경로 수정 */
+          await axios.put(audioData.presignedUrl, file, {
+            headers: {
+              'Content-Type': file.type,
+            },
+          });
+          filePath = audioData.path;
+        }
+        /* 2. 서버에 제목, 가수, 파일경로 전달 */
+        const { data } = await api.patch(`/api/song/${song.id}`, {
+          title,
+          artistName,
+          filePath,
+        });
+        dispatch({ type: UPDATE_SONG, payload: data });
+        alert('수정이 완료되었습니다');
+      } catch (err) {
+        alert(err.response.data.message);
+      }
+    }
+  };
