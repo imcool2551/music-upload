@@ -100,7 +100,7 @@ export const updateSong =
     `;
     if (window.confirm(message)) {
       try {
-        let filePath = song.filePath;
+        let filePath = '';
         /* 1. 파일변경이 있다면   */
         if (file) {
           /* presigned-url 요청하고 */
@@ -109,7 +109,7 @@ export const updateSong =
               filename: `${song.albumId}/${encodeURIComponent(file.name)}`,
             },
           });
-          /* s3 버킷에 음원파일 업로드 한 뒤 파일경로 수정 */
+          /* s3 버킷에 음원파일 업로드 한 뒤 파일경로 파라미터 업데이트 */
           await axios.put(audioData.presignedUrl, file, {
             headers: {
               'Content-Type': file.type,
@@ -117,7 +117,7 @@ export const updateSong =
           });
           filePath = audioData.path;
         }
-        /* 2. 서버에 제목, 가수, 파일경로 전달 */
+        /* 2. 서버에 제목&가수(필수), 파일경로(선택) 전달 */
         const { data } = await api.patch(`/api/song/${song.id}`, {
           title,
           artistName,

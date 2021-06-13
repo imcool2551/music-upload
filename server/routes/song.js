@@ -144,17 +144,17 @@ router.patch('/api/song/:id', async (req, res, next) => {
     }
 
     /* 음원파일 변경이 있다면, s3 버킷에서 이전 파일 삭제 */
-    if (song.filePath !== filePath) {
+    if (filePath) {
       const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: song.filePath,
       };
       await s3.deleteObject(params).promise();
+      song.filePath = filePath;
     }
 
     song.title = title;
     song.artistName = artistName;
-    song.filePath = filePath;
     const updatedSong = await song.save();
 
     res.json(updatedSong);
