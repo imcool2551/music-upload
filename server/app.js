@@ -10,6 +10,10 @@ const { sequelize } = require('./db/models');
 
 const app = express();
 app.set('port', process.env.PORT || 8000);
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+  app.disable('x-powered-by');
+}
 
 sequelize
   .sync({ force: false })
@@ -35,7 +39,7 @@ app.use(
     secret: process.env.COOKIE_SECRET,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: process.env === 'development' ? false : true,
     },
   })
 );
