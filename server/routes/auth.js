@@ -45,7 +45,6 @@ router.post('/api/auth/login', isNotLoggedIn, async (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      console.log(info);
       return res.status(401).json({ message: info.message });
     }
     req.login(user, (err) => {

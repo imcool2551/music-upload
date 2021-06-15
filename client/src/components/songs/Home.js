@@ -20,7 +20,7 @@ const Home = ({ isLoggedIn, fetchSongs }) => {
 
   useEffect(() => {
     fetchSongs(debouncedSearchTerm);
-  }, [debouncedSearchTerm]);
+  }, [fetchSongs, debouncedSearchTerm]);
 
   if (!isLoggedIn) {
     return <Redirect to="/login" />;

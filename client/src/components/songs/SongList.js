@@ -10,8 +10,12 @@ const SongItem = ({ song, updateSong }) => {
   const [artistName, setArtistName] = useState(song.artistName);
   const [file, setFile] = useState(null);
 
-  const handleSubmit = () => {
-    updateSong({ song, title, artistName, file });
+  const handleSubmit = async () => {
+    if (!title || !artistName) {
+      alert('노래 제목과 가수이름을 명시해주세요');
+      return;
+    }
+    await updateSong({ song, title, artistName, file });
   };
 
   return (
@@ -25,8 +29,8 @@ const SongItem = ({ song, updateSong }) => {
       </div>
       <div className="content" style={{ padding: '1rem' }}>
         <h4>앨범: {song.album.name}</h4>
-        <div class="ui labeled input">
-          <div class="ui label">제목</div>
+        <div className="ui labeled input">
+          <div className="ui label">제목</div>
           <input
             type="text"
             value={title}
@@ -54,7 +58,11 @@ const SongItem = ({ song, updateSong }) => {
           </button>
         </div>
       </div>
-      <a href={baseUrl + song.filePath} target="_blank">
+      <a
+        href={baseUrl + song.filePath}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <div className="ui bottom attached button">듣기</div>
       </a>
     </div>
